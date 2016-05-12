@@ -3,7 +3,7 @@ package main.java;
 import java.awt.Color;
 import java.awt.Font;
 import java.util.ArrayList;
-
+import java.awt.event.KeyEvent;
 import controlP5.ControlP5;
 import processing.core.PApplet;
 import processing.data.JSONArray;
@@ -32,23 +32,37 @@ public class MainApplet extends PApplet{
 		size(width, height);
 		smooth();
 		loadData();
-		
+		//buttons
 		cp5 = new ControlP5(this);
 		cp5.addButton("ADD ALL").setLabel("ADD ALL").setPosition(900,30).setSize(100,50);
 		cp5.addButton("CLEAR").setLabel("CLEAR").setPosition(1050,30).setSize(100,50);
-		
 		
 		
 	}
 
 	public void draw() {
 		background(250);
-		
+		//draw big circle
+		this.stroke(180, 238, 180);
+		this.strokeWeight(5);
+		this.fill(250);
+		this.ellipse(630, 340, 580, 580);
+		//draw characters
 		for(Character ch: characters){
+			//draw circles
 			ch.display();
+			//show character name
+			if ((mouseX>ch.initX-20 && mouseX<ch.initX+20) && (mouseY>ch.initY-20 && mouseY<ch.initY+20)){
+				ch.setRadius(50);			//bigger circle size
+				this.fill(180, 238, 180);	//color of name
+				text(ch.name, ch.initX+10, ch.initY);	//name
+			} else {
+				ch.setRadius(40);			//original circle size
+			}
 		}
+		
 	}
-
+	
 	private void loadData(){
 		
 		characters = new ArrayList<Character>();

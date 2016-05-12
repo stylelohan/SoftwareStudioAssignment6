@@ -11,7 +11,7 @@ import processing.core.PApplet;
 public class Character {
 	
 	private MainApplet parent;
-	int initX,initY,circleX,circleY;
+	int initX, initY, circleX, circleY, radius;
 	int colour;
 	String name;
 	private ArrayList<Character> targets;
@@ -24,9 +24,12 @@ public class Character {
 		this.colour = this.parent.unhex(colour.substring(1));
 		this.initX = x;
 		this.initY = y;
+		this.radius = 40;
 		value = new int[100];
 	}
-
+	public void setRadius(int r){
+		this.radius = r;
+	}
 	public void addTarget(Character target){
 		targets.add(target);
 	}
@@ -42,7 +45,7 @@ public class Character {
 	public void display(){
 		this.parent.noStroke();
 		this.parent.fill(this.colour);
-		this.parent.ellipse(this.initX, this.initY, 50, 50);
+		this.parent.ellipse(this.initX, this.initY, radius, radius);
 		
 	}
 	
