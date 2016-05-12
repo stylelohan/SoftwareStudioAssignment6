@@ -22,7 +22,7 @@ public class MainApplet extends PApplet{
 	JSONArray nodes,links;
 	
 	Character dragCh;
-	int netX, netY, netRadius;
+	int netX, netY, netRadius, netWeight;
 	
 	private ArrayList<Character> characters;
 	
@@ -43,14 +43,14 @@ public class MainApplet extends PApplet{
 		this.netRadius = 290;
 		this.netX = 630;
 		this.netY = 340;
-		
+		this.netWeight = 5;
 	}
 
 	public void draw() {
 		background(250);
 		//draw big circle
 		this.stroke(180, 238, 180);
-		this.strokeWeight(5);
+		this.strokeWeight(netWeight);
 		this.fill(250);
 		this.ellipse(this.netX, this.netY, this.netRadius*2, this.netRadius*2);
 		//draw characters
@@ -58,10 +58,10 @@ public class MainApplet extends PApplet{
 			//draw circles
 			ch.display();
 			//show character name
-			if ((mouseX>ch.initX-20 && mouseX<ch.initX+20) && (mouseY>ch.initY-20 && mouseY<ch.initY+20)){
+			if ((mouseX>ch.getNowX()-20 && mouseX<ch.getNowX()+20) && (mouseY>ch.getNowY()-20 && mouseY<ch.getNowY()+20)){
 				ch.setRadius(50);			//bigger circle size
 				this.fill(180, 238, 180);	//color of name
-				text(ch.name, ch.initX+10, ch.initY);	//name
+				text(ch.name, ch.getNowX()+10, ch.getNowY());	//name text
 			} else {
 				ch.setRadius(40);			//original circle size
 			}
@@ -70,31 +70,70 @@ public class MainApplet extends PApplet{
 	}
 	public void mousePressed(){
 		for (Character ch : characters){
-			if ((mouseX>ch.initX-20 && mouseX<ch.initX+20) && (mouseY>ch.initY-20 && mouseY<ch.initY+20)){
-				dragCh = ch;
-				//System.out.println("pressed");
+			//a character is either in circle or at initial position
+			if (ch.getInCircle()){
+				if ((mouseX>ch.getCircleX()-20 && mouseX<ch.getCircleX()+20) && (mouseY>ch.getCircleY()-20 && mouseY<ch.getCircleY()+20)){
+					dragCh = ch;
+				}
+			}
+			else {
+				if ((mouseX>ch.initX-20 && mouseX<ch.initX+20) && (mouseY>ch.initY-20 && mouseY<ch.initY+20)){
+					dragCh = ch;
+				}
 			}
 		}
 	}
 	public void mouseDragged(){
-		//System.out.println("dragged");
 		dragCh.setDrag(true);
 		dragCh.setDragX(pmouseX);
 		dragCh.setDragY(pmouseY);
+		if ((mouseX>this.netX-this.netRadius)&&(mouseX<this.netX+this.netRadius)&&(mouseY>this.netY-this.netRadius)&&(mouseY<this.netY+this.netRadius)){
+			netWeight = 10;
+		}
+		else {
+			netWeight = 5;
+		}
 	}
 	public void mouseReleased(){
+		netWeight = 5;
 		if (dragCh.getDrag()){
+			dragCh.setDrag(false);
+			//judge to 1. join the circle 2. return to initial position
+			if (dragCh.getInCircle()){
+				if ((mouseX>this.netX-this.netRadius)&&(mouseX<this.netX+this.netRadius)&&(mouseY>this.netY-this.netRadius)&&(mouseY<this.netY+this.netRadius)){
+					//do nothing since it is already in circle
+				}
+				else {
+					dragCh.setInCircle(false);
+				}
+			}
+			else {
+				if ((mouseX>this.netX-this.netRadius)&&(mouseX<this.netX+this.netRadius)&&(mouseY>this.netY-this.netRadius)&&(mouseY<this.netY+this.netRadius)){
+					//join the circle
+					dragCh.setInCircle(true);
+					/**has to be written as a method**/
+					dragCh.setCircleX(netX+netRadius);
+					dragCh.setCircleY(netY);
+				}
+				else {
+					//do nothing since it originally at initial position
+					dragCh.setInCircle(false);
+				}
+			}
+		}
+		/*if (dragCh.getDrag()){
 			dragCh.setDrag(false);
 			//judge join network circle or not
 			if ((mouseX>this.netX-this.netRadius)&&(mouseX<this.netX+this.netRadius)&&(mouseY>this.netY-this.netRadius)&&(mouseY<this.netY+this.netRadius)){
 				dragCh.setInCircle(true);
+				//has to write a method
 				dragCh.setCircleX(netX+netRadius);
 				dragCh.setCircleY(netY);
 			}
 			else{
 				dragCh.setInCircle(false);
 			}
-		}
+		}*/
 	}
 	private void loadData(){
 		
