@@ -23,6 +23,7 @@ public class MainApplet extends PApplet{
 	
 	Character dragCh;
 	int netX, netY, netRadius, netWeight;
+	int circleNum=0;
 	
 	private ArrayList<Character> characters;
 	
@@ -37,13 +38,24 @@ public class MainApplet extends PApplet{
 		loadData();
 		//buttons
 		cp5 = new ControlP5(this);
-		cp5.addButton("ADD ALL").setLabel("ADD ALL").setPosition(900,30).setSize(100,50);
-		cp5.addButton("CLEAR").setLabel("CLEAR").setPosition(1050,30).setSize(100,50);
+		cp5.addButton("buttonA").setLabel("ADD ALL").setPosition(900,30).setSize(100,50);
+		cp5.addButton("buttonB").setLabel("CLEAR").setPosition(1050,30).setSize(100,50);
 		//
 		this.netRadius = 290;
 		this.netX = 630;
 		this.netY = 340;
 		this.netWeight = 5;
+	}
+	
+	public void buttonA(){
+		//System.out.println("add circle!");
+		dragCh.setInCircle(true);
+		circleNum += 1;
+		setLittleCirclePosition();
+	}
+	
+	public void buttonB(){
+		
 	}
 
 	public void draw() {
@@ -84,6 +96,7 @@ public class MainApplet extends PApplet{
 		}
 	}
 	public void mouseDragged(){
+		//System.out.println("dragged");
 		dragCh.setDrag(true);
 		dragCh.setDragX(pmouseX);
 		dragCh.setDragY(pmouseY);
@@ -112,8 +125,10 @@ public class MainApplet extends PApplet{
 					//join the circle
 					dragCh.setInCircle(true);
 					/**has to be written as a method**/
-					dragCh.setCircleX(netX+netRadius);
-					dragCh.setCircleY(netY);
+					circleNum += 1;
+					setLittleCirclePosition();
+					//dragCh.setCircleX(netX+netRadius);
+					//dragCh.setCircleY(netY);
 				}
 				else {
 					//do nothing since it originally at initial position
@@ -121,19 +136,27 @@ public class MainApplet extends PApplet{
 				}
 			}
 		}
-		/*if (dragCh.getDrag()){
-			dragCh.setDrag(false);
-			//judge join network circle or not
-			if ((mouseX>this.netX-this.netRadius)&&(mouseX<this.netX+this.netRadius)&&(mouseY>this.netY-this.netRadius)&&(mouseY<this.netY+this.netRadius)){
-				dragCh.setInCircle(true);
-				//has to write a method
-				dragCh.setCircleX(netX+netRadius);
-				dragCh.setCircleY(netY);
-			}
-			else{
-				dragCh.setInCircle(false);
-			}
-		}*/
+		
+	}
+	public void setLittleCirclePosition(){
+		if(circleNum == 1){
+			System.out.println("one circle");
+			float addX = (float)Math.cos(Math.toRadians(30));
+			float addY = (float)Math.sin(Math.toRadians(30));
+			dragCh.setCircleX(netX+netRadius*addX);
+			dragCh.setCircleY(netY+netRadius*addY);
+		}else{
+			System.out.println("more circle");
+			int degree = (int)360/circleNum;
+			float addX = (float)Math.cos(Math.toRadians(degree));
+			float addY = (float)Math.sin(Math.toRadians(degree));
+			
+			if(circleNum%2==0) dragCh.setCircleX(netX-netRadius*addX);
+			else dragCh.setCircleX(netX+netRadius*addX);
+			
+			if(circleNum%2==0) dragCh.setCircleY(netY-netRadius*addY);
+			else dragCh.setCircleY(netY+netRadius*addY);
+		}
 	}
 	private void loadData(){
 		

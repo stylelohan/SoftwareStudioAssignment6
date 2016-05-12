@@ -10,14 +10,23 @@ import processing.core.PApplet;
 */
 public class Character {
 	
+	/*private MainApplet parent;
+	int initX, initY, dragX, dragY, radius;
+	float circleX, circleY;
+	int colour;
+	String name;
+	boolean drag, inCircle;
+	private ArrayList<Character> targets;
+	private int value[];*/
+	
 	private MainApplet parent;
 	int colour;
 	String name;
 	int radius;
-	int initX, initY;
-	int circleX, circleY;
+	float initX, initY;
+	float circleX, circleY;
 	int dragX, dragY;
-	int nowX, nowY;
+	float nowX, nowY;
 	
 	boolean drag, inCircle;
 	private ArrayList<Character> targets;
@@ -37,14 +46,12 @@ public class Character {
 	public void addTarget(Character target){
 		targets.add(target);
 	}
+	
 	public ArrayList<Character> getTargets(){
 		return this.targets;
 	}
 	public void setRadius(int r){
 		this.radius = r;
-	}
-	public void setValue(int index,int v){
-		value[index] = v;
 	}
 	public void setDrag(boolean b){
 		this.drag = b;
@@ -58,17 +65,21 @@ public class Character {
 	public boolean getInCircle(){
 		return this.inCircle;
 	}
-	
-	public void setCircleX(int x){
+	public void setValue(int index,int v){
+		value[index] = v;
+	}
+	public void setCircleX(float x){
 		this.circleX = x;
+		System.out.println("circle x: "+circleX);
 	}
-	public void setCircleY(int y){
+	public void setCircleY(float y){
 		this.circleY = y;
+		System.out.println("circle y: "+circleY);
 	}
-	public int getCircleX(){
+	public float getCircleX(){
 		return this.circleX;
 	}
-	public int getCircleY(){
+	public float getCircleY(){
 		return this.circleY;
 	}
 	public void setDragX(int x){
@@ -77,10 +88,10 @@ public class Character {
 	public void setDragY(int y){
 		this.dragY = y;
 	}
-	public int getNowX(){
+	public float getNowX(){
 		return this.nowX;
 	}
-	public int getNowY(){
+	public float getNowY(){
 		return this.nowY;
 	}
 	public void display(){
