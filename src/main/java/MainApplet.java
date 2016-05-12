@@ -54,12 +54,19 @@ public class MainApplet extends PApplet{
 	
 	public void buttonA(){
 		//System.out.println("add circle!");
-		dragCh.setInCircle(true);
-		circleNum += 1;
-		setLittleCirclePosition();
+		for(Character c:characters){
+			c.setInCircle(true);
+			circleList.add(c);
+			if(circleNum!=0) circleNum += 1;
+			setLittleCirclePosition();
+		}
 	}
 	
 	public void buttonB(){
+		for (Character c: characters){
+			c.setDrag(false);
+			c.setInCircle(false);
+		}
 		
 	}
 
@@ -130,7 +137,10 @@ public class MainApplet extends PApplet{
 	}
 	public void mouseReleased(){
 		netWeight = 5;
-		if (dragCh.getDrag()){
+		if (dragCh==null){
+			//do nothing since it's in the beginning
+		}
+		else if (dragCh.getDrag()){
 			dragCh.setDrag(false);
 			//judge to 1. join the circle 2. return to initial position
 			if (dragCh.getInCircle()){
@@ -169,19 +179,9 @@ public class MainApplet extends PApplet{
 		}else{
 			System.out.println("more circle");
 			int num=1;
-			
-			//float addX = (float)Math.cos(Math.toRadians(degree));
-			//float addY = (float)Math.sin(Math.toRadians(degree));
-			
-			
-			/*if(add%2==0) dragCh.setCircleX(netX-netRadius*addX);
-			else dragCh.setCircleX(netX+netRadius*addX);
-			
-			if(add%2==0) dragCh.setCircleY(netY-netRadius*addY);
-			else dragCh.setCircleY(netY+netRadius*addY);*/
 			int degree=360;
 			for(Character n: circleList){
-				degree -= 9;
+				degree -= 10;
 				float addX = (float)Math.cos(Math.toRadians(degree));
 				float addY = (float)Math.sin(Math.toRadians(degree));
 				n.setCircleX(netX+netRadius*addX);
