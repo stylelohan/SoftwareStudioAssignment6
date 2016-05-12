@@ -1,6 +1,13 @@
 package main.java;
 
+import java.awt.Color;
+import java.awt.Font;
+import java.util.ArrayList;
+
+import controlP5.ControlP5;
 import processing.core.PApplet;
+import processing.data.JSONArray;
+import processing.data.JSONObject;
 
 /**
 * This class is for sketching outcome using Processing
@@ -11,6 +18,13 @@ public class MainApplet extends PApplet{
 	private String path = "main/resources/";
 	private String file = "starwars-episode-1-interactions.json";
 	
+	JSONObject data;
+	JSONArray nodes,links;
+	
+	private ArrayList<Character> characters;
+	
+	private ControlP5 cp5;
+	
 	private final static int width = 1200, height = 650;
 	
 	public void setup() {
@@ -19,14 +33,56 @@ public class MainApplet extends PApplet{
 		smooth();
 		loadData();
 		
+		cp5 = new ControlP5(this);
+		cp5.addButton("ADD ALL").setLabel("ADD ALL").setPosition(900,30).setSize(100,50);
+		cp5.addButton("CLEAR").setLabel("CLEAR").setPosition(1050,30).setSize(100,50);
+		
+		
+		
 	}
 
 	public void draw() {
-
+		background(250);
+		
+		for(Character ch: characters){
+			ch.display();
+		}
 	}
 
 	private void loadData(){
-
+		
+		characters = new ArrayList<Character>();
+		data = loadJSONObject(path+file);
+		nodes = data.getJSONArray("nodes");
+		links = data.getJSONArray("links");
+		
+		int x=50,y=0,n=0;
+		
+		for(int i=0;i<nodes.size();i++){
+			JSONObject node = nodes.getJSONObject(i);
+			String name = node.getString("name");
+			int value = node.getInt("value");
+			String colour = node.getString("colour");
+			if(n<11){
+				y += 55;
+				n++;
+			}else{
+				n = 1;
+				x += 70;
+				y = 55;
+			}
+			Character ch = new Character(this,name,colour,x,y);
+			characters.add(ch);
+		}
+		
+		for(int i=0;i<links.size();i++){
+			JSONObject link = links.getJSONObject(i);
+			int source = link.getInt("source");
+			int target = link.getInt("target");
+			int value = link.getInt("value");
+			characters.get(source).addTarget(characters.get(target));
+			characters.get(source).setValue(target, value);
+		}
 	}
 
 }
