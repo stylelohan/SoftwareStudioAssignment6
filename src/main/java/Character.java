@@ -11,9 +11,10 @@ import processing.core.PApplet;
 public class Character {
 	
 	private MainApplet parent;
-	int initX, initY, circleX, circleY, radius;
+	int initX, initY, circleX, circleY, dragX, dragY, radius;
 	int colour;
 	String name;
+	boolean drag, inCircle;
 	private ArrayList<Character> targets;
 	private int value[];
 
@@ -25,10 +26,8 @@ public class Character {
 		this.initX = x;
 		this.initY = y;
 		this.radius = 40;
+		this.drag = false;
 		value = new int[100];
-	}
-	public void setRadius(int r){
-		this.radius = r;
 	}
 	public void addTarget(Character target){
 		targets.add(target);
@@ -37,15 +36,49 @@ public class Character {
 	public ArrayList<Character> getTargets(){
 		return this.targets;
 	}
-	
+	public void setRadius(int r){
+		this.radius = r;
+	}
+	public void setDrag(boolean b){
+		this.drag = b;
+	}
+	public boolean getDrag(){
+		return this.drag;
+	}
+	public void setInCircle(boolean b){
+		this.inCircle = b;
+	}
+	public boolean getInCircle(){
+		return this.inCircle;
+	}
 	public void setValue(int index,int v){
 		value[index] = v;
 	}
-	
+	public void setCircleX(int x){
+		this.circleX = x;
+	}
+	public void setCircleY(int y){
+		this.circleY = y;
+	}
+	public void setDragX(int x){
+		this.dragX = x;
+	}
+	public void setDragY(int y){
+		this.dragY = y;
+	}
 	public void display(){
 		this.parent.noStroke();
 		this.parent.fill(this.colour);
-		this.parent.ellipse(this.initX, this.initY, radius, radius);
+		if (drag){
+			this.parent.ellipse(dragX, dragY, radius, radius);
+		}
+		else if (inCircle){
+			this.parent.ellipse(this.circleX, this.circleY, radius, radius);
+		}
+		else {
+			this.parent.ellipse(this.initX, this.initY, radius, radius);
+		}
+		
 		
 	}
 	

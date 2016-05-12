@@ -21,6 +21,9 @@ public class MainApplet extends PApplet{
 	JSONObject data;
 	JSONArray nodes,links;
 	
+	Character dragCh;
+	int netX, netY, netRadius;
+	
 	private ArrayList<Character> characters;
 	
 	private ControlP5 cp5;
@@ -36,7 +39,10 @@ public class MainApplet extends PApplet{
 		cp5 = new ControlP5(this);
 		cp5.addButton("ADD ALL").setLabel("ADD ALL").setPosition(900,30).setSize(100,50);
 		cp5.addButton("CLEAR").setLabel("CLEAR").setPosition(1050,30).setSize(100,50);
-		
+		//
+		this.netRadius = 290;
+		this.netX = 630;
+		this.netY = 340;
 		
 	}
 
@@ -46,7 +52,7 @@ public class MainApplet extends PApplet{
 		this.stroke(180, 238, 180);
 		this.strokeWeight(5);
 		this.fill(250);
-		this.ellipse(630, 340, 580, 580);
+		this.ellipse(this.netX, this.netY, this.netRadius*2, this.netRadius*2);
 		//draw characters
 		for(Character ch: characters){
 			//draw circles
@@ -62,7 +68,34 @@ public class MainApplet extends PApplet{
 		}
 		
 	}
-	
+	public void mousePressed(){
+		for (Character ch : characters){
+			if ((mouseX>ch.initX-20 && mouseX<ch.initX+20) && (mouseY>ch.initY-20 && mouseY<ch.initY+20)){
+				dragCh = ch;
+				//System.out.println("pressed");
+			}
+		}
+	}
+	public void mouseDragged(){
+		//System.out.println("dragged");
+		dragCh.setDrag(true);
+		dragCh.setDragX(pmouseX);
+		dragCh.setDragY(pmouseY);
+	}
+	public void mouseReleased(){
+		if (dragCh.getDrag()){
+			dragCh.setDrag(false);
+			//judge join network circle or not
+			if ((mouseX>this.netX-this.netRadius)&&(mouseX<this.netX+this.netRadius)&&(mouseY>this.netY-this.netRadius)&&(mouseY<this.netY+this.netRadius)){
+				dragCh.setInCircle(true);
+				dragCh.setCircleX(netX+netRadius);
+				dragCh.setCircleY(netY);
+			}
+			else{
+				dragCh.setInCircle(false);
+			}
+		}
+	}
 	private void loadData(){
 		
 		characters = new ArrayList<Character>();
