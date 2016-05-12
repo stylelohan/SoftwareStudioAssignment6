@@ -41,6 +41,7 @@ public class Character {
 		this.initY = y;
 		this.radius = 40;
 		this.drag = false;
+		this.inCircle = false;
 		value = new int[100];
 	}
 	public void addTarget(Character target){
@@ -94,9 +95,33 @@ public class Character {
 	public float getNowY(){
 		return this.nowY;
 	}
+	public int getValue(int index){
+		return value[index];
+	}
 	public void display(){
-		this.parent.noStroke();
 		this.parent.fill(this.colour, 180);
+		//network
+		/*if (inCircle){
+			for(int i = 0; i < targets.size(); i++){
+				//System.out.println(value.length);
+				if(value[i]>0){
+					//System.out.println("index: "+i+", value: "+value[i]);
+					//draw line if target is also in circle
+					if (targets.get(i).getInCircle()){
+						System.out.println("index: "+i+", value: "+value[i]);
+						this.parent.stroke(127, 0, 0);
+						this.parent.strokeWeight(value[i]);	//set line thickness
+						System.out.println(circleX+","+circleY+","+targets.get(i).getCircleX()+","+targets.get(i).getCircleY());
+						this.parent.line(circleX, circleY, targets.get(i).getCircleX(), targets.get(i).getCircleY());
+					}
+					else {
+						//do nothing
+					}
+				}
+			}
+		}*/
+		//draw circle, and set nowX, nowY for name display
+		this.parent.noStroke();
 		if (drag){
 			this.parent.ellipse(dragX, dragY, radius, radius);
 			nowX = dragX;
@@ -112,17 +137,6 @@ public class Character {
 			nowX = initX;
 			nowY = initY;
 		}
-		//network
-		if (inCircle){
-			for(int i = 0; i < 100; i++){
-				if(value[i]>0){
-					//draw line
-					this.parent.strokeWeight(value[i]);	//set line thickness
-					this.parent.line(circleX, circleY, targets.get(i).getCircleX(), targets.get(i).getCircleY());
-				}
-			}
-		}
-		
 	}
 	
 }

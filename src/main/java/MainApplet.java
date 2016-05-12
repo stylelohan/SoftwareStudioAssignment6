@@ -8,6 +8,7 @@ import controlP5.ControlP5;
 import processing.core.PApplet;
 import processing.data.JSONArray;
 import processing.data.JSONObject;
+import java.util.Random;
 
 /**
 * This class is for sketching outcome using Processing
@@ -26,15 +27,19 @@ public class MainApplet extends PApplet{
 	int circleNum=0;
 	
 	private ArrayList<Character> characters;
+	private ArrayList<Character> circleList;
 	
 	private ControlP5 cp5;
 	
 	private final static int width = 1200, height = 650;
 	
 	public void setup() {
-
+		
 		size(width, height);
 		smooth();
+		//
+		characters = new ArrayList<Character>();
+		circleList = new ArrayList<Character>();
 		loadData();
 		//buttons
 		cp5 = new ControlP5(this);
@@ -67,6 +72,22 @@ public class MainApplet extends PApplet{
 		this.ellipse(this.netX, this.netY, this.netRadius*2, this.netRadius*2);
 		//draw characters
 		for(Character ch: characters){
+			//draw network
+			if (ch.getInCircle()){
+				for(int i = 0; i < ch.getTargets().size(); i++){
+					if(ch.getValue(i)>0){
+						//draw line if target is also in circle
+						if (ch.getTargets().get(i).getInCircle()){
+							this.stroke(127, 0, 0, 50);
+							this.strokeWeight(ch.getValue(i));	//set line thickness
+							this.line(ch.getCircleX(), ch.getCircleY(), ch.getTargets().get(i).getCircleX(), ch.getTargets().get(i).getCircleY());
+						}
+						else {
+							//do nothing
+						}
+					}
+				}
+			}
 			//draw circles
 			ch.display();
 			//show character name
@@ -125,10 +146,9 @@ public class MainApplet extends PApplet{
 					//join the circle
 					dragCh.setInCircle(true);
 					/**has to be written as a method**/
+					circleList.add(dragCh);
 					circleNum += 1;
 					setLittleCirclePosition();
-					//dragCh.setCircleX(netX+netRadius);
-					//dragCh.setCircleY(netY);
 				}
 				else {
 					//do nothing since it originally at initial position
@@ -139,6 +159,7 @@ public class MainApplet extends PApplet{
 		
 	}
 	public void setLittleCirclePosition(){
+		
 		if(circleNum == 1){
 			System.out.println("one circle");
 			float addX = (float)Math.cos(Math.toRadians(30));
@@ -147,20 +168,30 @@ public class MainApplet extends PApplet{
 			dragCh.setCircleY(netY+netRadius*addY);
 		}else{
 			System.out.println("more circle");
-			int degree = (int)360/circleNum;
-			float addX = (float)Math.cos(Math.toRadians(degree));
-			float addY = (float)Math.sin(Math.toRadians(degree));
+			int num=1;
 			
-			if(circleNum%2==0) dragCh.setCircleX(netX-netRadius*addX);
+			//float addX = (float)Math.cos(Math.toRadians(degree));
+			//float addY = (float)Math.sin(Math.toRadians(degree));
+			
+			
+			/*if(add%2==0) dragCh.setCircleX(netX-netRadius*addX);
 			else dragCh.setCircleX(netX+netRadius*addX);
 			
-			if(circleNum%2==0) dragCh.setCircleY(netY-netRadius*addY);
-			else dragCh.setCircleY(netY+netRadius*addY);
+			if(add%2==0) dragCh.setCircleY(netY-netRadius*addY);
+			else dragCh.setCircleY(netY+netRadius*addY);*/
+			int degree=360;
+			for(Character n: circleList){
+				degree -= 9;
+				float addX = (float)Math.cos(Math.toRadians(degree));
+				float addY = (float)Math.sin(Math.toRadians(degree));
+				n.setCircleX(netX+netRadius*addX);
+				n.setCircleY(netY+netRadius*addY);
+				//num++;
+			}
 		}
 	}
 	private void loadData(){
 		
-		characters = new ArrayList<Character>();
 		data = loadJSONObject(path+file);
 		nodes = data.getJSONArray("nodes");
 		links = data.getJSONArray("links");
@@ -190,7 +221,8 @@ public class MainApplet extends PApplet{
 			int target = link.getInt("target");
 			int value = link.getInt("value");
 			characters.get(source).addTarget(characters.get(target));
-			characters.get(source).setValue(target, value);
+			//System.out.println(characters.get(source).getTargets().size());
+			characters.get(source).setValue(characters.get(source).getTargets().size()-1, value);
 		}
 	}
 
