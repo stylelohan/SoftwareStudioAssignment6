@@ -17,14 +17,16 @@ import java.util.Random;
 @SuppressWarnings("serial")
 public class MainApplet extends PApplet{
 	private String path = "main/resources/";
-	private String file = "starwars-episode-1-interactions.json";
+	//private String file = "starwars-episode-1-interactions.json";
 	
 	JSONObject data;
 	JSONArray nodes,links;
 	
 	Character dragCh;
 	int netX, netY, netRadius, netWeight;
-	int circleNum=0;
+	int circleNum = 0;
+	int episode;
+	int sub = 10;
 	
 	private ArrayList<Character> characters;
 	private ArrayList<Character> circleList;
@@ -40,6 +42,7 @@ public class MainApplet extends PApplet{
 		//
 		characters = new ArrayList<Character>();
 		circleList = new ArrayList<Character>();
+		this.episode = 1;
 		loadData();
 		//buttons
 		cp5 = new ControlP5(this);
@@ -53,7 +56,6 @@ public class MainApplet extends PApplet{
 	}
 	
 	public void buttonA(){
-		//System.out.println("add circle!");
 		for(Character c:characters){
 			c.setInCircle(true);
 			circleList.add(c);
@@ -63,11 +65,10 @@ public class MainApplet extends PApplet{
 	}
 	
 	public void buttonB(){
-		for (Character c: characters){
-			c.setDrag(false);
-			c.setInCircle(false);
+		for (Character ch: characters){
+			ch.setDrag(false);
+			ch.setInCircle(false);
 		}
-		
 	}
 
 	public void draw() {
@@ -138,7 +139,7 @@ public class MainApplet extends PApplet{
 	public void mouseReleased(){
 		netWeight = 5;
 		if (dragCh==null){
-			//do nothing since it's in the beginning
+			
 		}
 		else if (dragCh.getDrag()){
 			dragCh.setDrag(false);
@@ -171,28 +172,73 @@ public class MainApplet extends PApplet{
 	public void setLittleCirclePosition(){
 		
 		if(circleNum == 1){
-			System.out.println("one circle");
+			//System.out.println("one circle");
 			float addX = (float)Math.cos(Math.toRadians(30));
 			float addY = (float)Math.sin(Math.toRadians(30));
 			dragCh.setCircleX(netX+netRadius*addX);
 			dragCh.setCircleY(netY+netRadius*addY);
 		}else{
-			System.out.println("more circle");
+			//System.out.println("more circle");
 			int num=1;
 			int degree=360;
 			for(Character n: circleList){
-				degree -= 10;
+				degree -= sub;/**change**/
 				float addX = (float)Math.cos(Math.toRadians(degree));
 				float addY = (float)Math.sin(Math.toRadians(degree));
 				n.setCircleX(netX+netRadius*addX);
 				n.setCircleY(netY+netRadius*addY);
-				//num++;
 			}
 		}
 	}
+	public void keyPressed() {
+		if(key == KeyEvent.VK_1){
+			episode = 1;
+			sub = 10;
+			this.clear();
+			this.characters.clear();
+		}
+		else if(key == KeyEvent.VK_2) {
+			episode = 2;
+			sub = 11;
+			this.clear();
+			this.characters.clear();
+		}
+		else if(key == KeyEvent.VK_3) {
+			episode = 3;
+			sub = 15;
+			this.clear();
+			this.characters.clear();
+		}
+		else if(key == KeyEvent.VK_4) {
+			episode = 4;
+			sub = 18;
+			this.clear();
+			this.characters.clear();
+		}
+		else if(key == KeyEvent.VK_5) {
+			episode = 5;
+			sub = 19;
+			this.clear();
+			this.characters.clear();
+		}
+		else if(key == KeyEvent.VK_6) {
+			episode = 6;
+			sub = 20;
+			this.clear();
+			this.characters.clear();
+		}
+		else if(key == KeyEvent.VK_7) {
+			episode = 7;
+			sub = 15;
+			this.clear();
+			this.characters.clear();
+		}
+		loadData();
+		draw();
+	}
 	private void loadData(){
 		
-		data = loadJSONObject(path+file);
+		data = loadJSONObject(path+"starwars-episode-"+episode+"-interactions.json");
 		nodes = data.getJSONArray("nodes");
 		links = data.getJSONArray("links");
 		
