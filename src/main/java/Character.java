@@ -112,7 +112,16 @@ public class Character {
 			nowX = initX;
 			nowY = initY;
 		}
-		
+		//network
+		if (inCircle){
+			for(int i = 0; i < 100; i++){
+				if(value[i]>0){
+					//draw line
+					this.parent.strokeWeight(value[i]);	//set line thickness
+					this.parent.line(circleX, circleY, targets.get(i).getCircleX(), targets.get(i).getCircleY());
+				}
+			}
+		}
 		
 	}
 	
