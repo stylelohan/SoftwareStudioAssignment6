@@ -5,6 +5,8 @@ import java.awt.Font;
 import java.util.ArrayList;
 import java.awt.event.KeyEvent;
 import controlP5.ControlP5;
+import ddf.minim.AudioPlayer;
+import ddf.minim.Minim;
 import processing.core.PApplet;
 import processing.data.JSONArray;
 import processing.data.JSONObject;
@@ -17,7 +19,8 @@ import java.util.Random;
 @SuppressWarnings("serial")
 public class MainApplet extends PApplet{
 	private String path = "main/resources/";
-	//private String file = "starwars-episode-1-interactions.json";
+	Minim minim;
+	AudioPlayer song;
 	
 	JSONObject data;
 	JSONArray nodes,links;
@@ -27,6 +30,7 @@ public class MainApplet extends PApplet{
 	int circleNum = 0;
 	int episode;
 	int sub = 10;
+	boolean changeVersion;
 	
 	private ArrayList<Character> characters;
 	private ArrayList<Character> circleList;
@@ -44,6 +48,10 @@ public class MainApplet extends PApplet{
 		circleList = new ArrayList<Character>();
 		this.episode = 1;
 		loadData();
+		//music
+		minim = new Minim(this);
+		song = minim.loadFile("main/resources/Shake_It_Off.mp3");
+		song.play();
 		//buttons
 		cp5 = new ControlP5(this);
 		cp5.addButton("buttonA").setLabel("ADD ALL").setPosition(900,30).setSize(100,50);
@@ -53,6 +61,7 @@ public class MainApplet extends PApplet{
 		this.netX = 630;
 		this.netY = 340;
 		this.netWeight = 5;
+		this.changeVersion = false;
 	}
 	
 	public void buttonA(){
@@ -125,7 +134,6 @@ public class MainApplet extends PApplet{
 		}
 	}
 	public void mouseDragged(){
-		//System.out.println("dragged");
 		dragCh.setDrag(true);
 		dragCh.setDragX(pmouseX);
 		dragCh.setDragY(pmouseY);
@@ -156,7 +164,6 @@ public class MainApplet extends PApplet{
 				if ((mouseX>this.netX-this.netRadius)&&(mouseX<this.netX+this.netRadius)&&(mouseY>this.netY-this.netRadius)&&(mouseY<this.netY+this.netRadius)){
 					//join the circle
 					dragCh.setInCircle(true);
-					/**has to be written as a method**/
 					circleList.add(dragCh);
 					circleNum += 1;
 					setLittleCirclePosition();
@@ -172,15 +179,13 @@ public class MainApplet extends PApplet{
 	public void setLittleCirclePosition(){
 		
 		if(circleNum == 1){
-			//System.out.println("one circle");
 			float addX = (float)Math.cos(Math.toRadians(30));
 			float addY = (float)Math.sin(Math.toRadians(30));
 			dragCh.setCircleX(netX+netRadius*addX);
 			dragCh.setCircleY(netY+netRadius*addY);
 		}else{
-			//System.out.println("more circle");
-			int num=1;
-			int degree=360;
+			int num = 1;
+			int degree = 360;
 			for(Character n: circleList){
 				degree -= sub;/**change**/
 				float addX = (float)Math.cos(Math.toRadians(degree));
@@ -194,45 +199,45 @@ public class MainApplet extends PApplet{
 		if(key == KeyEvent.VK_1){
 			episode = 1;
 			sub = 10;
-			this.clear();
-			this.characters.clear();
+			this.changeVersion = true;
 		}
 		else if(key == KeyEvent.VK_2) {
 			episode = 2;
 			sub = 11;
-			this.clear();
-			this.characters.clear();
+			this.changeVersion = true;
 		}
 		else if(key == KeyEvent.VK_3) {
 			episode = 3;
 			sub = 15;
-			this.clear();
-			this.characters.clear();
+			this.changeVersion = true;
 		}
 		else if(key == KeyEvent.VK_4) {
 			episode = 4;
 			sub = 18;
-			this.clear();
-			this.characters.clear();
+			this.changeVersion = true;
 		}
 		else if(key == KeyEvent.VK_5) {
 			episode = 5;
 			sub = 19;
-			this.clear();
-			this.characters.clear();
+			this.changeVersion = true;
 		}
 		else if(key == KeyEvent.VK_6) {
 			episode = 6;
 			sub = 20;
-			this.clear();
-			this.characters.clear();
+			this.changeVersion = true;
 		}
 		else if(key == KeyEvent.VK_7) {
 			episode = 7;
 			sub = 15;
+			this.changeVersion = true;
+		}
+		//
+		if (this.changeVersion){
 			this.clear();
 			this.characters.clear();
+			this.changeVersion = false;
 		}
+		
 		loadData();
 		draw();
 	}
@@ -267,7 +272,6 @@ public class MainApplet extends PApplet{
 			int target = link.getInt("target");
 			int value = link.getInt("value");
 			characters.get(source).addTarget(characters.get(target));
-			//System.out.println(characters.get(source).getTargets().size());
 			characters.get(source).setValue(characters.get(source).getTargets().size()-1, value);
 		}
 	}

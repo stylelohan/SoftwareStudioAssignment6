@@ -9,16 +9,7 @@ import processing.core.PApplet;
 * You will need to declare other variables depending on your implementation.
 */
 public class Character {
-	
-	/*private MainApplet parent;
-	int initX, initY, dragX, dragY, radius;
-	float circleX, circleY;
-	int colour;
-	String name;
-	boolean drag, inCircle;
-	private ArrayList<Character> targets;
-	private int value[];*/
-	
+
 	private MainApplet parent;
 	int colour;
 	String name;
@@ -71,11 +62,9 @@ public class Character {
 	}
 	public void setCircleX(float x){
 		this.circleX = x;
-		System.out.println("circle x: "+circleX);
 	}
 	public void setCircleY(float y){
 		this.circleY = y;
-		System.out.println("circle y: "+circleY);
 	}
 	public float getCircleX(){
 		return this.circleX;
@@ -100,26 +89,6 @@ public class Character {
 	}
 	public void display(){
 		this.parent.fill(this.colour, 180);
-		//network
-		/*if (inCircle){
-			for(int i = 0; i < targets.size(); i++){
-				//System.out.println(value.length);
-				if(value[i]>0){
-					//System.out.println("index: "+i+", value: "+value[i]);
-					//draw line if target is also in circle
-					if (targets.get(i).getInCircle()){
-						System.out.println("index: "+i+", value: "+value[i]);
-						this.parent.stroke(127, 0, 0);
-						this.parent.strokeWeight(value[i]);	//set line thickness
-						System.out.println(circleX+","+circleY+","+targets.get(i).getCircleX()+","+targets.get(i).getCircleY());
-						this.parent.line(circleX, circleY, targets.get(i).getCircleX(), targets.get(i).getCircleY());
-					}
-					else {
-						//do nothing
-					}
-				}
-			}
-		}*/
 		//draw circle, and set nowX, nowY for name display
 		this.parent.noStroke();
 		if (drag){
